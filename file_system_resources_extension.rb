@@ -5,11 +5,11 @@ class FileSystemResourcesExtension < Radiant::Extension
   version RadiantFileSystemResourcesExtension::VERSION
   description RadiantFileSystemResourcesExtension::DESCRIPTION
   url RadiantFileSystemResourcesExtension::URL
-  
+
   def activate
     Layout.send(:include, FileSystemResource)
-    Snippet.send(:include, FileSystemResource)
-    
+    Snippet.send(:include, FileSystemResource) if Module.constants.include?('Snippet')
+
     # Radiant chokes on these files...
     # admin.layouts.index.add :thead, 'layout_type_head', :before => 'modify_header'
     # admin.layouts.index.add :tbody, 'layout_type_column', :before => 'modify_cell'

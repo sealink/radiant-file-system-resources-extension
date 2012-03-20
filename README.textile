@@ -24,8 +24,8 @@ h4. Older versions of Radiant (without Gemfile)
 h3. Use it
 
 * Create your file-based layouts/snippets
-<pre>RAILS_ROOT/radiant/layouts/your-layout-name.radius
-RAILS_ROOT/radiant/snippets/your-snippet-name.radius</pre>
+<pre>RAILS_ROOT/app/templates/layouts/your-layout-name.radius
+RAILS_ROOT/app/templates/snippets/your-snippet-name.radius</pre>
 * Register your layouts/snippets.  (needed only when add/remove, not on edit)
 <pre>rake radiant:extensions:file_system_resources:register</pre>
 * Your newly created layouts/snippets are now available to use in admin panel.

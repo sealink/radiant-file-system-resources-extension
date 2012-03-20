@@ -5,30 +5,22 @@ module FileSystemResource
         if file_system_resource?
           File.read(path)
         else
-          self[:content]
+          content
         end
-      end
-      
-      def name
-        file_system_resource? ? self[:name] + '_fs' : self[:name]
       end
 
       def path
-        RAILS_ROOT + "/radiant/#{self.class.name.downcase.pluralize}/#{filename}.radius"
+        RAILS_ROOT + "/app/templates/#{self.class.name.downcase.pluralize}/#{filename}.radius"
       end
 
       def content=(value)
         raise "File System Resources are read-only from the admin." if file_system_resource?
-        self[:content] = value
+        self.content = value
       end
 
       def filename
         raise "#filename should not be called unless a file_system_resource." unless file_system_resource?
-        self[:content]
-      end
-
-      def filename=(value)
-        self[:content] = value
+        name
       end
     end
   end
