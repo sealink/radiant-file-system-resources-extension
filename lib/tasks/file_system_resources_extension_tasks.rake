@@ -55,10 +55,7 @@ namespace :radiant do
             seen << filename
             resource = klass.find_by_name(filename)
             if resource
-              if resource.file_system_resource?
-                puts "Skipped #{klass.name} #{filename} (already registered)."
-                next
-              end
+              next if resource.file_system_resource?
               puts "Registered #{klass.name} #{filename}. WARNING: Will shadow existing database content!"
               resource.update_attribute(:file_system_resource, true)
             else
@@ -67,16 +64,20 @@ namespace :radiant do
             end
           end
           klass.find_all_by_file_system_resource(true).reject{|e| seen.include?(e.filename)}.each do |e|
+            puts "Removing #{klass.name} #{e.filename} (no longer exists on file system)."
             dump_resource(e)
             e.destroy
-            puts "Removed #{klass.name} #{e.filename} (no longer exists on file system)."
           end
         end
       end
 
       def dump_resource(resource)
         if resource.content.present?
-          puts "todo: archive dumped record"
+          filename = Rails.root.join('tmp',resource.name + '.radius.archive')
+          puts "     Previously shadowed content archived to #{filename}"
+          File.open(filename, 'w') do |file|
+            file.write(resource.content)
+          end
         end
       end
 

@@ -2,7 +2,7 @@ module FileSystemResource
   def self.included(klass)
     klass.class_eval do
       def content
-        if file_system_resource?
+        if file_system_resource? and File.exist?(path)
           File.read(path)
         else
           self[:content]
