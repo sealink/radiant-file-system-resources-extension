@@ -49,8 +49,7 @@ namespace :radiant do
           seen = []
           fs_name = klass.name.downcase.pluralize
 
-          # templates(fs_name).each do |f|
-          Dir[RAILS_ROOT + "/app/templates/#{fs_name}/*.radius"].each do |f|
+          templates(fs_name).each do |f|
             filename = File.basename(f, ".radius")
             seen << filename
             resource = klass.find_by_name(filename)
@@ -81,14 +80,17 @@ namespace :radiant do
         end
       end
 
-      # def templates_path(dir)
-      #   old_path = Rails.root.join('radiant', dir)
-      #   new_path = Rails.root.join('app', 'templates', dir)
-      #   if (File.directory?(old_path))
-      #     Dir[old_path.join('*.radius')].each do |f|
-      #     end
-      #   end
-      # end
+      def templates(dir)
+        old_path = Rails.root.join('radiant', dir)
+        new_path = Rails.root.join('app', 'templates', dir)
+        if (File.directory?(old_path))
+          Dir[old_path.join('*.radius')].each do |f|
+            path = Pathname.new(f)
+            puts "WARNING: Please move #{path.relative_path_from(Rails.root)} to #{new_path.join(path.basename).relative_path_from(Rails.root)}"
+          end
+        end
+        Dir[new_path.join('*.radius')]
+      end
 
 
     end
