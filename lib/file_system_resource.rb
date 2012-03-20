@@ -5,7 +5,7 @@ module FileSystemResource
         if file_system_resource?
           File.read(path)
         else
-          content
+          self[:content]
         end
       end
 
@@ -15,7 +15,7 @@ module FileSystemResource
 
       def content=(value)
         raise "File System Resources are read-only from the admin." if file_system_resource?
-        self.content = value
+        self[:content] = value
       end
 
       def filename

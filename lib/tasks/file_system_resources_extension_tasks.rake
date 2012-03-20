@@ -48,28 +48,38 @@ namespace :radiant do
         [Layout, Snippet].each do |klass|
           seen = []
           fs_name = klass.name.downcase.pluralize
-          
+
           # templates(fs_name).each do |f|
           Dir[RAILS_ROOT + "/app/templates/#{fs_name}/*.radius"].each do |f|
             filename = File.basename(f, ".radius")
             seen << filename
-            if klass.find_by_file_system_resource_and_content(true, filename)
-              puts "Skipped #{klass.name} #{filename} (already registered)."
-              next
+            resource = klass.find_by_name(filename)
+            if resource
+              if resource.file_system_resource?
+                puts "Skipped #{klass.name} #{filename} (already registered)."
+                next
+              end
+              puts "Registered #{klass.name} #{filename}. WARNING: Will shadow existing database content!"
+              resource.update_attribute(:file_system_resource, true)
             else
-              name = "#{filename}"
-              klass.create!(:name => name, :filename => filename, :file_system_resource => true)
+              klass.create!(:name => filename, :file_system_resource => true)
               puts "Registered #{klass.name} #{filename}."
             end
           end
           klass.find_all_by_file_system_resource(true).reject{|e| seen.include?(e.filename)}.each do |e|
+            dump_resource(e)
             e.destroy
             puts "Removed #{klass.name} #{e.filename} (no longer exists on file system)."
           end
         end
       end
-      
-      
+
+      def dump_resource(resource)
+        if resource.content.present?
+          puts "todo: archive dumped record"
+        end
+      end
+
       # def templates_path(dir)
       #   old_path = Rails.root.join('radiant', dir)
       #   new_path = Rails.root.join('app', 'templates', dir)
@@ -78,8 +88,8 @@ namespace :radiant do
       #     end
       #   end
       # end
-      
-      
+
+
     end
   end
 end
