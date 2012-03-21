@@ -2,7 +2,7 @@ h1. File System Resources
 
 This enables the use of Radius-based layouts and snippets on the file system. Layouts go in RAILS_ROOT/radiant/layouts, and snippets go in RAILS_ROOT/radiant/snippets.
 
-h2. Quickstart
+h2. QuickStart
 
 h3. Install it
 
@@ -10,10 +10,10 @@ h4. Radiant ~1.0
 
 1. add <code>gem 'radiant-file_system_resources-extension'</code>
    to your Gemfile
-2. Run <code>rake radiant:extensions:update_all</code> to initialise
+2. Run <code>rake radiant:extensions:update_all</code> to initialize
    the extension
 3. Run <code>rake radiant:extensions:file_system_resources:migrate</code>
-4. Restart Webserver
+4. Restart web server
 
 h4. Older versions of Radiant (without Gemfile)
 
@@ -28,4 +28,7 @@ h3. Use it
 RAILS_ROOT/app/templates/snippets/your-snippet-name.radius</pre>
 * Register your layouts/snippets.  (needed only when add/remove, not on edit)
 <pre>rake radiant:extensions:file_system_resources:register</pre>
+* Alternatively, for easy conversion you can extract an existing database resource into a file-based resource. But
+note that the new file resource will still need to be registered upon deployment.
+<pre>rake radiant:extensions:file_system_resources:extract snippets=name1,name2,etc layouts=layout1,layout2,etc</pre>
 * Your newly created layouts/snippets are now available to use in admin panel.

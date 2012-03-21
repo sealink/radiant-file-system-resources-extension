@@ -64,18 +64,37 @@ namespace :radiant do
           end
           klass.find_all_by_file_system_resource(true).reject{|e| seen.include?(e.filename)}.each do |e|
             puts "Removing #{klass.name} #{e.filename} (no longer exists on file system)."
-            dump_resource(e)
+            archived_name = dump_resource(e)
+            puts "--> Previously shadowed content archived to #{archived_name.relative_path_from(Rails.root)}" if archived_name
             e.destroy
           end
         end
       end
 
-      def dump_resource(resource)
+      desc "Extracts specified database layouts and/or snippets to Fs Resources "
+      task :extract => :environment do
+        [Layout, Snippet].each do |klass|
+          fs_dir = klass.name.downcase.pluralize
+          ENV[fs_dir].to_s.split(',').each do |resource_name|
+            resource = klass.find_by_name(resource_name)
+            if resource
+              filename = dump_resource(resource, "app/templates/#{fs_dir}")
+              puts "extracted #{klass.name.downcase} named '#{resource_name}' to #{filename.relative_path_from(Rails.root)}"
+              resource.update_attribute(:file_system_resource, true)
+            else
+              puts "WARNING: Unable to find #{klass.name.downcase} named '#{resource_name}' to extract!"
+            end
+          end
+        end
+      end
+
+
+      def dump_resource(resource, dir='tmp')
         if resource.content.present?
-          filename = Rails.root.join('tmp',resource.name + '.radius.archive')
-          puts "     Previously shadowed content archived to #{filename}"
-          File.open(filename, 'w') do |file|
-            file.write(resource.content)
+          Rails.root.join(dir, resource.name + '.radius').tap do |filename|
+            File.open(filename, 'w') do |file|
+              file.write(resource.content)
+            end
           end
         end
       end
@@ -91,7 +110,6 @@ namespace :radiant do
         end
         Dir[new_path.join('*.radius')]
       end
-
 
     end
   end
