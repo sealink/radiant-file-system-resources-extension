@@ -38,14 +38,14 @@ namespace :radiant do
             cp file, local_tasks_path, :verbose => false
           end
         end
-        %w(layouts snippets).each do |dir|
+        %w(layouts).each do |dir|
           FileUtils.mkdir_p(Rails.root.join('app','templates',dir))
         end
       end
 
       desc "Registers file system resources in the database (needed only when added/removed, not on edit)."
       task :register => :environment do
-        [Layout, Snippet].each do |klass|
+        [Layout].each do |klass|
           seen = []
           fs_name = klass.name.downcase.pluralize
 
@@ -71,9 +71,9 @@ namespace :radiant do
         end
       end
 
-      desc "Extracts specified database layouts and/or snippets to Fs Resources "
+      desc "Extracts specified database layouts to Fs Resources "
       task :extract => :environment do
-        [Layout, Snippet].each do |klass|
+        [Layout].each do |klass|
           fs_dir = klass.name.downcase.pluralize
           ENV[fs_dir].to_s.split(',').each do |resource_name|
             resource = klass.find_by_name(resource_name)

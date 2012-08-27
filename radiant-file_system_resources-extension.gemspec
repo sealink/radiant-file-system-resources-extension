@@ -6,7 +6,7 @@ Gem::Specification.new do |s|
   s.name        = "radiant-file_system_resources-extension"
   s.version     = RadiantFileSystemResourcesExtension::VERSION
   s.platform    = Gem::Platform::RUBY
-  s.authors     = ['Nathaniel Talbott', 'Jim Gay', 'John Muhl']
+  s.authors     = ['Nathaniel Talbott', 'Jim Gay', 'John Muhl', 'Ryan Sandridge']
   s.email       = 'nathaniel@talbott.ws'
   s.homepage    = RadiantFileSystemResourcesExtension::URL
   s.summary     = RadiantFileSystemResourcesExtension::SUMMARY
